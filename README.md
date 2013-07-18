@@ -1,4 +1,7 @@
 =================
+## Info
+
+This is quick and dirty app - was created in like 10-20 minutes. Don't expect code quality here.
 
 On my machine, iReport designer was failing to recompile .jrxml files, even when the versions of it and the jasper dependency were matched. I didn't want to find solution for that one online as error messages were cryptic, so this simple tool makes it a bit easier.
 
