@@ -1,10 +1,52 @@
 apply plugin: 'java'
+apply plugin: 'fatjar'
+apply plugin: 'application'
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 version = '1.0'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+// properties
+project.ext {
+    mainClassName = 'io.application.JasperRecompiler'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'eu.appsatori:gradle-fatjar-plugin:0.2-rc1+'
+    }
+}
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    // jasper reports
+    compile ('jasperreports:jasperreports:3.5.2'){
+        exclude module: 'itext'
+    }
+
+    //logback
+    compile 'ch.qos.logback:logback-classic:1.0.13'
+}
+
+
+
+sourceSets {
+    main {
+        java {
+            'src/main/java'
+        }
+
+        resources {
+            srcDirs 'src/main/resources',
+                    'src/main/properties'
+        }
+    }
 }
 
 task "create-dirs"  {
@@ -17,4 +59,15 @@ task "create-dirs"  {
     sourceSets*.resources.srcDirs*.each {
         it.mkdirs()
     }
+}
+
+
+fatJar {
+    classifier 'fat'
+
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+
+    exclude 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.SF'
 }
